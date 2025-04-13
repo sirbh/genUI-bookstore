@@ -57,8 +57,9 @@ const ShaktimanBooks = ({
       if (lccn) parts.push(`lccn:${encodeURIComponent(lccn)}`);
       if (oclc) parts.push(`oclc:${encodeURIComponent(oclc)}`);
 
+      const startIndex = pageIndex * maxResults;
       const searchQuery = parts.filter(Boolean).join('+');
-      const url = `https://www.googleapis.com/books/v1/volumes?q=${searchQuery}&startIndex=${pageIndex}`;
+      const url = `https://www.googleapis.com/books/v1/volumes?q=${searchQuery}&startIndex=${startIndex}`;
 
       try {
         const response = await fetch(url);
