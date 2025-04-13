@@ -40,16 +40,14 @@ export default function Home() {
         {conversation.map((message: ClientMessage) => (
           <div
             key={message.id}
-            className={`flex ${
-              message.role === 'user' ? 'justify-end' : 'justify-start'
-            }`}
+            className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'
+              }`}
           >
             <div
-              className={`rounded-xl p-4 shadow-sm ${
-                message.role === 'user'
+              className={`rounded-xl p-4 shadow-sm ${message.role === 'user'
                   ? 'bg-indigo-600 text-white max-w-sm'
                   : 'bg-white border max-w-full w-full'
-              }`}
+                }`}
             >
               <div className="text-xs text-gray-400 mb-1 capitalize">
                 {message.role}
@@ -64,7 +62,27 @@ export default function Home() {
 
       {/* Input */}
       <footer className="bg-white px-4 py-3 border-t">
-        <div className="flex items-center gap-2">
+        <form
+          onSubmit={async (e) => {
+            e.preventDefault();
+            if (!input.trim()) return;
+
+            setConversation((currentConversation: ClientMessage[]) => [
+              ...currentConversation,
+              { id: generateId(), role: 'user', display: input },
+            ]);
+
+            const message = await continueConversation(input);
+
+            setConversation((currentConversation: ClientMessage[]) => [
+              ...currentConversation,
+              message,
+            ]);
+
+            setInput('');
+          }}
+          className="flex items-center gap-2"
+        >
           <input
             type="text"
             value={input}
@@ -73,28 +91,13 @@ export default function Home() {
             className="flex-1 px-4 py-2 text-sm border rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none"
           />
           <button
-            onClick={async () => {
-              if (!input.trim()) return;
-
-              setConversation((currentConversation: ClientMessage[]) => [
-                ...currentConversation,
-                { id: generateId(), role: 'user', display: input },
-              ]);
-
-              const message = await continueConversation(input);
-
-              setConversation((currentConversation: ClientMessage[]) => [
-                ...currentConversation,
-                message,
-              ]);
-
-              setInput('');
-            }}
+            type="submit"
             className="px-4 py-2 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
           >
             Send
           </button>
-        </div>
+        </form>
+
       </footer>
     </div>
   );
