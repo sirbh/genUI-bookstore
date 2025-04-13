@@ -1,5 +1,6 @@
 'use client';
 
+import { ClientMessage } from '@/app/actions';
 import { generateId } from 'ai';
 import { useActions, useUIState } from 'ai/rsc';
 import React, { useEffect, useState } from 'react';
@@ -23,12 +24,13 @@ const ShaktimanBooks = ({
   lccn?: string;
   oclc?: string;
 }) => {
-  const [books, setBooks] = useState([]);
+  const [books, setBooks] = useState<{ id: string; volumeInfo: { title: string; subtitle?: string; authors?: string[]; publishedDate?: string; description?: string; imageLinks?: { thumbnail?: string }; previewLink?: string } }[]>([]);
   const [loading, setLoading] = useState(true);
 
   const action = useActions();
 
   console.log('action', action);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [conversation, setConversation] = useUIState();
   const { continueConversation } = useActions();
   const [totalItems, setTotalItems] = useState(0);
@@ -109,6 +111,7 @@ const ShaktimanBooks = ({
                 {info.subtitle ? `: ${info.subtitle}` : ''}
               </h3>
               {info.imageLinks?.thumbnail && (
+                // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={info.imageLinks.thumbnail}
                   alt={`${info.title} cover`}

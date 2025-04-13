@@ -2,8 +2,16 @@
 
 import React, { useEffect, useState } from 'react';
 
-const BookDetails = ({ bookId }) => {
-  const [book, setBook] = useState(null);
+const BookDetails = ({ bookId }: { bookId: string }) => {
+  const [book, setBook] = useState<{
+    title?: string;
+    authors?: string[];
+    publisher?: string;
+    publishedDate?: string;
+    imageLinks?: { thumbnail?: string };
+    description?: string;
+    previewLink?: string;
+  } | null>(null);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -21,6 +29,7 @@ const BookDetails = ({ bookId }) => {
           setError('');
         }
       } catch (err) {
+        console.error('Error fetching book data:', err);
         setError('Failed to fetch book data.');
       }
     };
