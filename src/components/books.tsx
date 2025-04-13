@@ -120,7 +120,7 @@ const ShaktimanBooks = ({
                         display: `Look for the book ${info.title}`,
                       },
                     ]);
-                    const message = await continueConversation(`Look for the book ${book.id}}`);
+                    const message = await continueConversation(`Look for the book with the id ${book.id}}`);
                     setConversation((currentConversation: ClientMessage[]) => [
                       ...currentConversation,
                       message,
@@ -128,7 +128,7 @@ const ShaktimanBooks = ({
                   }}
                   className="w-64 shrink-0 bg-white rounded-lg border shadow-sm p-4 cursor-pointer hover:shadow-md transition"
                 >
-                  <h3 className="text-sm font-bold mb-1">
+                  <h3 className="text-sm font-bold mb-1 line-clamp-2" title={info.title}>
                     {info.title}
                     {info.subtitle ? `: ${info.subtitle}` : ''}
                   </h3>
