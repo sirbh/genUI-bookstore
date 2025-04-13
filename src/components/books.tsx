@@ -104,7 +104,21 @@ const ShaktimanBooks = ({
           return (
             <div
               key={book.id}
-              className="w-64 shrink-0 bg-white rounded-lg border shadow-sm p-4"
+              onClick={async () => {
+                setConversation((currentConversation: ClientMessage[]) => [
+                  ...currentConversation,
+                  { id: generateId(), role: 'user', display: `Look for the book ${info.title}` },
+                ]);
+
+                const message = await continueConversation(`Look for the book ${book.id}}`);
+
+                setConversation((currentConversation: ClientMessage[]) => [
+                  ...currentConversation,
+                  message,
+                ]);
+              }}
+              className="w-64 shrink-0 bg-white rounded-lg border shadow-sm p-4 cursor-pointer hover:shadow-md transition"
+            
             >
               <h3 className="text-sm font-bold mb-1">
                 {info.title}
@@ -116,22 +130,6 @@ const ShaktimanBooks = ({
                   src={info.imageLinks.thumbnail}
                   alt={`${info.title} cover`}
                   className="w-32 h-48 object-cover mx-auto my-2"
-                  onClick={async () => {
-                    
-                    setConversation((currentConversation: ClientMessage[]) => [
-                      ...currentConversation,
-                      { id: generateId(), role: 'user', display: `Look for the book ${info.title}` },
-                    ]);
-      
-                    const message = await continueConversation(`Look for the book ${book.id}}`);
-      
-                    setConversation((currentConversation: ClientMessage[]) => [
-                      ...currentConversation,
-                      message,
-                    ]);
-      
-                    
-                  }}
                 />
               )}
               <p className="text-xs text-gray-600">
