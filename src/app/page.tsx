@@ -13,6 +13,7 @@ export default function Home() {
   const { continueConversation } = useActions();
   const scrollRef = useRef<HTMLDivElement>(null);
 
+
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;

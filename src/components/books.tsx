@@ -1,5 +1,7 @@
 'use client';
 
+import { generateId } from 'ai';
+import { useActions, useUIState } from 'ai/rsc';
 import React, { useEffect, useState } from 'react';
 
 const ShaktimanBooks = ({
@@ -24,8 +26,16 @@ const ShaktimanBooks = ({
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const action = useActions();
+
+  console.log('action', action);
+  const [conversation, setConversation] = useUIState();
+  const { continueConversation } = useActions();
+
   useEffect(() => {
-    const fetchBooks = async () => {
+
+    
+     const fetchBooks = async () => {
       setLoading(true);
       const parts = [encodeURIComponent(query)];
       if (intitle) parts.push(`intitle:${encodeURIComponent(intitle)}`);
@@ -81,6 +91,22 @@ const ShaktimanBooks = ({
                   src={info.imageLinks.thumbnail}
                   alt={`${info.title} cover`}
                   className="w-32 h-48 object-cover mx-auto my-2"
+                  onClick={async () => {
+                    
+                    setConversation((currentConversation: ClientMessage[]) => [
+                      ...currentConversation,
+                      { id: generateId(), role: 'user', display: `Look for the book ${info.title}` },
+                    ]);
+      
+                    const message = await continueConversation(`Look for the book ${book.id}}`);
+      
+                    setConversation((currentConversation: ClientMessage[]) => [
+                      ...currentConversation,
+                      message,
+                    ]);
+      
+                    
+                  }}
                 />
               )}
               <p className="text-xs text-gray-600">

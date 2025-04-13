@@ -6,6 +6,7 @@ import { ReactNode } from 'react';
 import { z } from 'zod';
 import { generateId } from 'ai';
 import ShaktimanBooks from '@/components/books';
+import BookDetails from '@/components/book';
 
 export interface ServerMessage {
   role: 'user' | 'assistant';
@@ -26,7 +27,7 @@ export async function continueConversation(
   const history = getMutableAIState();
 
   const result = await streamUI({
-    system:`
+    system: `
 
     You are a helpful and knowledgeable assistant that specializes in books.
 Your job is to help users find books based on title, author, subject, publisher, or other metadata like ISBN. You should also provide book descriptions, authors, publication dates, and links to preview or buy them.
@@ -63,7 +64,7 @@ Your tone is informative, warm, and enthusiastic about reading.
         }),
         generate: async (params) => {
           const queryParts: Record<string, string> = {};
-      
+
           if (params.query) queryParts.query = params.query;
           if (params.intitle) queryParts.intitle = `${params.intitle}`;
           if (params.inauthor) queryParts.inauthor = `${params.inauthor}`;
@@ -74,9 +75,9 @@ Your tone is informative, warm, and enthusiastic about reading.
           if (params.oclc) queryParts.oclc = `${params.oclc}`;
 
           console.log('Query parts:', queryParts); // Debugging line
-      
+
           const finalQuery = Object.values(queryParts).join('+');
-      
+
           history.done((messages: ServerMessage[]) => [
             ...messages,
             {
@@ -84,10 +85,23 @@ Your tone is informative, warm, and enthusiastic about reading.
               content: `Searching books for "${finalQuery}"`,
             },
           ]);
-      
+
           return <ShaktimanBooks {...queryParts} />;
         },
+      },
+
+      Book:{
+        description: 'Get detailed information about a specific book using its ID',
+        parameters: z.object({
+          bookId: z.string().describe('ID of the book to retrieve details for'),
+        }),
+        generate: async (params) => {
+          const { bookId } = params;
+          return <BookDetails bookId={bookId} />;
       }
+
+
+    },
     },
   });
 
