@@ -30,7 +30,7 @@ BookBot is a modern web application that lets users **search, filter, and explor
 
 ```bash
 # Clone the repo
-git clone https://github.com/your-username/bookbot.git
+git clone https://github.com/sirbh/genUI-bookstore.git
 cd bookbot
 
 # Install dependencies
